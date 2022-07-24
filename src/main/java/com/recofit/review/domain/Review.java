@@ -4,11 +4,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
+import com.recofit.review.util.AuditingDate;
+import com.recofit.review.util.TargetType;
+
 import lombok.Getter;
 
 @Entity
 @Getter
-public class Review {
+public class Review extends AuditingDate {
 
   @Id
   @GeneratedValue
@@ -18,7 +21,10 @@ public class Review {
   private Long userId;
   private Long targetId;
 
-  private String targetType;
+  private String userName;
+  private TargetType targetType;
+  private String targetName;
+  private Integer programType;
 
   private double reviewRating;
   private String reviewComment;
