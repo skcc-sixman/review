@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.recofit.review.domain.Review;
 import com.recofit.review.repository.ReviewRepository;
+import com.recofit.review.util.TargetType;
 
 @Service
 public class ReviewService {
@@ -18,8 +19,14 @@ public class ReviewService {
     reviewRepository.save(review);
   }
 
-  public List<Review> getReviews() {
-    List<Review> reviews = reviewRepository.findAll();
+  public List<Review> getUserReviews(Long userId, TargetType targetType, boolean isDeleted) {
+    List<Review> reviews = reviewRepository.findByUserIdAndTargetTypeAndIsDeleted(userId, targetType, isDeleted);
+
+    return reviews;
+  }
+
+  public List<Review> getTargetReviews(Long targetId, TargetType targetType, boolean isDeleted) {
+    List<Review> reviews = reviewRepository.findByTargetIdAndTargetTypeAndIsDeleted(targetId, targetType, isDeleted);
 
     return reviews;
   }

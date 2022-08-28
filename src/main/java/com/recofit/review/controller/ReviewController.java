@@ -18,6 +18,7 @@ import com.recofit.review.event.ReviewCreated;
 import com.recofit.review.service.EventService;
 import com.recofit.review.service.ReviewService;
 import com.recofit.review.util.TargetType;
+import com.recofit.review.util.UserType;
 
 @RestController
 @CrossOrigin
@@ -41,8 +42,25 @@ public class ReviewController {
   }
 
   @GetMapping(value = "/reviews")
-  public List<Review> getReviews() {
-    return reviewService.getReviews();
+  public List<Review> getReviews(@RequestParam(required = false, value = "target-type") TargetType targetType) {
+    Long userId = 1L;
+    UserType userType = UserType.TRAINER;
+
+    if(userType == UserType.USER) {
+      return reviewService.getUserReviews(userId, targetType, false);
+    }
+
+    Long targetId = userId;
+
+    if(userType == UserType.TRAINER) {
+      targetType = TargetType.TRAINER;
+    }
+
+    if(userType == UserType.GYM) {
+      targetType = TargetType.GYM;
+    }
+
+    return reviewService.getTargetReviews(targetId, targetType, false);
   }
 
   @GetMapping(value = "/reviews/{reviewId}")
