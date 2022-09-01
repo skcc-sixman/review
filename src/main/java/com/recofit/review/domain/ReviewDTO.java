@@ -9,6 +9,10 @@
 
 //   private Long reviewId;
 
+//   private Long reservationId;
+//   private Long userId;
+//   private Long targetId;
+
 //   private String userName;
 //   private TargetType targetType;
 //   private String targetName;

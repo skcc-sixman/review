@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recofit.review.domain.Review;
 import com.recofit.review.event.ReviewCreated;
+import com.recofit.review.event.ReviewUpdated;
 import com.recofit.review.service.EventService;
 import com.recofit.review.service.ReviewService;
 import com.recofit.review.util.TargetType;
@@ -32,7 +33,7 @@ public class ReviewController {
 
   @PostMapping(value = "/reviews")
   public void createReview(@RequestBody Review review) {
-    reviewService.createReview(review);
+    reviewService.setReview(review);
 
     ReviewCreated reviewCreated = new ReviewCreated(review);
 
@@ -44,7 +45,7 @@ public class ReviewController {
   @GetMapping(value = "/reviews")
   public List<Review> getReviews(@RequestParam(required = false, value = "target-type") TargetType targetType) {
     Long userId = 1L;
-    UserType userType = UserType.TRAINER;
+    UserType userType = UserType.USER;
 
     if(userType == UserType.USER) {
       return reviewService.getUserReviews(userId, targetType, false);
@@ -66,6 +67,17 @@ public class ReviewController {
   @GetMapping(value = "/reviews/{reviewId}")
   public Review getReview(@PathVariable Long reviewId) {
     return reviewService.getReview(reviewId);
+  }
+
+  @PatchMapping(value = "/reviews/{reviewId}")
+  public void updateReview(@RequestBody Review review) {
+    reviewService.setReview(review);
+
+    ReviewUpdated reviewUpdated = new ReviewUpdated(review);
+
+    String event = reviewUpdated.json();
+
+    eventService.publish("test", event);
   }
 
 }

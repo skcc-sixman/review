@@ -15,7 +15,7 @@ public class ReviewService {
   @Autowired
   private ReviewRepository reviewRepository;
 
-  public void createReview(Review review) {
+  public void setReview(Review review) {
     reviewRepository.save(review);
   }
 
