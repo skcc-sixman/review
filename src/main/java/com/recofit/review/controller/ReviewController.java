@@ -41,7 +41,7 @@ public class ReviewController {
 
     String event = reviewCreated.json();
 
-    eventService.publish("test", event);
+    eventService.publish("review", event);
   }
 
   @GetMapping(value = "/reviews")
@@ -79,7 +79,7 @@ public class ReviewController {
 
     String event = reviewUpdated.json();
 
-    eventService.publish("test", event);
+    eventService.publish("review", event);
   }
 
 }
