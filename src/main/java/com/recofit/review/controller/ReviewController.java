@@ -48,10 +48,6 @@ public class ReviewController {
     UserType userType = UserType.USER;
     List<ReviewDTO> reviewDTOs = Collections.emptyList();
 
-    if(userType == UserType.USER) {
-      reviewDTOs = reviewService.getUserReviews(userId, targetType, false);
-    }
-
     Long targetId = userId;
 
     if(userType == UserType.TRAINER) {
@@ -63,6 +59,10 @@ public class ReviewController {
     }
 
     reviewDTOs = reviewService.getTargetReviews(targetId, targetType, false);
+
+    if(userType == UserType.USER) {
+      reviewDTOs = reviewService.getUserReviews(userId, targetType, false);
+    }
 
     Response response = Response.builder()
       .result("SUCCESS")
