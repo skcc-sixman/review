@@ -4,9 +4,9 @@ import com.recofit.review.domain.Review;
 import com.recofit.review.util.Event;
 import com.recofit.review.util.TargetType;
 
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class ReviewCreated extends Event {
 
   private String type;

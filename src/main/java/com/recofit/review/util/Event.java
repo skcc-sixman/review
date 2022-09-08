@@ -1,7 +1,5 @@
 package com.recofit.review.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -10,8 +8,6 @@ import lombok.Setter;
 
 @Setter
 public class Event {
-
-  private Logger logger = LoggerFactory.getLogger(Event.class);
 
   private String type;
 
@@ -35,7 +31,7 @@ public class Event {
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     }
-    logger.info("##### Event(json): " + str);
+
     return str;
   }
 
