@@ -1,11 +1,13 @@
 server:
   port: 8085
 
-spring:
-  datasource:
-    url: jdbc:h2:mem:review
-  jpa:
-    show-sql: true
+---
+
+# spring:
+#   datasource:
+#     url: jdbc:h2:mem:review
+#   jpa:
+#     show-sql: true
 
 ---
 
@@ -22,10 +24,10 @@ spring:
   kafka:
     consumer:
       bootstrap-servers:
-      - b-2.recofitkafkaclust.01fdq3.c4.kafka.ap-northeast-2.amazonaws.com:9094,b-1.recofitkafkaclust.01fdq3.c4.kafka.ap-northeast-2.amazonaws.com:9094
+      - b-1.recofit.bqx97j.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.recofit.bqx97j.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-3.recofit.bqx97j.c4.kafka.ap-northeast-2.amazonaws.com:9092
     producer:
       bootstrap-servers:
-      - b-2.recofitkafkaclust.01fdq3.c4.kafka.ap-northeast-2.amazonaws.com:9094,b-1.recofitkafkaclust.01fdq3.c4.kafka.ap-northeast-2.amazonaws.com:9094
-  config:
-    activate:
-      on-profile: prd
+      - b-1.recofit.bqx97j.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.recofit.bqx97j.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-3.recofit.bqx97j.c4.kafka.ap-northeast-2.amazonaws.com:9092
+  # config:
+    # activate:
+    #   on-profile: prd
