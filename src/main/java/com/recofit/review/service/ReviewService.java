@@ -23,13 +23,21 @@ public class ReviewService {
   private EventService eventService;
 
   public void createReview(Review review) {
-    ReviewCreated reviewCreated = new ReviewCreated(review);
+    reviewRepository.save(review);
+
+    double average = reviewRepository.averageByTargetIdAndTargetTypeAndDeleted(review.getTargetId(), review.getTargetType());
+
+    ReviewDTO reviewDTO = ReviewDTO.builder()
+      .targetId(review.getTargetId())
+      .targetType(review.getTargetType())
+      .reviewRating(average)
+      .build();
+
+    ReviewCreated reviewCreated = new ReviewCreated(reviewDTO);
 
     String event = reviewCreated.json();
 
     eventService.publish("review", event);
-
-    reviewRepository.save(review);
   }
 
   public List<ReviewDTO> getUserReviews(Long userId, TargetType targetType, boolean deleted) {
@@ -97,13 +105,21 @@ public class ReviewService {
   }
 
   public void updateReview(Review review) {
-    ReviewUpdated reviewUpdated = new ReviewUpdated(review);
+    reviewRepository.save(review);
+
+    double average = reviewRepository.averageByTargetIdAndTargetTypeAndDeleted(review.getTargetId(), review.getTargetType());
+
+    ReviewDTO reviewDTO = ReviewDTO.builder()
+      .targetId(review.getTargetId())
+      .targetType(review.getTargetType())
+      .reviewRating(average)
+      .build();
+
+    ReviewUpdated reviewUpdated = new ReviewUpdated(reviewDTO);
 
     String event = reviewUpdated.json();
 
     eventService.publish("review", event);
-
-    reviewRepository.save(review);
   }
 
 }

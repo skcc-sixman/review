@@ -1,22 +1,23 @@
 package com.recofit.review.event;
 
-import com.recofit.review.domain.Review;
+import com.recofit.review.domain.ReviewDTO;
 import com.recofit.review.util.Event;
 import com.recofit.review.util.TargetType;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class ReviewUpdated extends Event {
 
   private String type;
-  private Long reviewId;
   private Long targetId;
   private TargetType targetType;
   private Double ReviewRating;
 
-  public ReviewUpdated(Review review) {
-    super(review);
+  public ReviewUpdated(ReviewDTO reviewDTO) {
+    super(reviewDTO);
   }
 
 }
