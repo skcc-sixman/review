@@ -1,11 +1,15 @@
 package com.recofit.review.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.recofit.review.domain.Review;
+import com.recofit.review.domain.ReviewDTO;
+import com.recofit.review.event.ReviewCreated;
+import com.recofit.review.event.ReviewUpdated;
 import com.recofit.review.repository.ReviewRepository;
 import com.recofit.review.util.TargetType;
 
@@ -15,26 +19,91 @@ public class ReviewService {
   @Autowired
   private ReviewRepository reviewRepository;
 
-  public void setReview(Review review) {
+  @Autowired
+  private EventService eventService;
+
+  public void createReview(Review review) {
+    ReviewCreated reviewCreated = new ReviewCreated(review);
+
+    String event = reviewCreated.json();
+
+    eventService.publish("review", event);
+
     reviewRepository.save(review);
   }
 
-  public List<Review> getUserReviews(Long userId, TargetType targetType, boolean isDeleted) {
-    List<Review> reviews = reviewRepository.findByUserIdAndTargetTypeAndIsDeleted(userId, targetType, isDeleted);
+  public List<ReviewDTO> getUserReviews(Long userId, TargetType targetType, boolean deleted) {
+    List<Review> reviews = reviewRepository.findByUserIdAndTargetTypeAndDeleted(userId, targetType, deleted);
 
-    return reviews;
+    List<ReviewDTO> reviewDTOs = reviews.stream().map(
+      review -> ReviewDTO.builder()
+        .reviewId(review.getReviewId())
+        .reservationId(review.getReservationId())
+        .userId(review.getUserId())
+        .targetId(review.getTargetId())
+        .userName(review.getUserName())
+        .targetType(review.getTargetType())
+        .targetName(review.getTargetName())
+        .programType(review.getProgramType())
+        .reviewRating(review.getReviewRating())
+        .reviewComment(review.getReviewComment())
+        .deleted(review.isDeleted())
+        .build()
+    ).collect(Collectors.toList());
+
+    return reviewDTOs;
   }
 
-  public List<Review> getTargetReviews(Long targetId, TargetType targetType, boolean isDeleted) {
-    List<Review> reviews = reviewRepository.findByTargetIdAndTargetTypeAndIsDeleted(targetId, targetType, isDeleted);
+  public List<ReviewDTO> getTargetReviews(Long targetId, TargetType targetType, boolean deleted) {
+    List<Review> reviews = reviewRepository.findByTargetIdAndTargetTypeAndDeleted(targetId, targetType, deleted);
 
-    return reviews;
+    List<ReviewDTO> reviewDTOs = reviews.stream().map(
+      review -> ReviewDTO.builder()
+        .reviewId(review.getReviewId())
+        .reservationId(review.getReservationId())
+        .userId(review.getUserId())
+        .targetId(review.getTargetId())
+        .userName(review.getUserName())
+        .targetType(review.getTargetType())
+        .targetName(review.getTargetName())
+        .programType(review.getProgramType())
+        .reviewRating(review.getReviewRating())
+        .reviewComment(review.getReviewComment())
+        .deleted(review.isDeleted())
+        .build()
+    ).collect(Collectors.toList());
+
+    return reviewDTOs;
   }
 
-  public Review getReview(Long reviewId) {
+  public ReviewDTO getReview(Long reviewId) {
     Review review = reviewRepository.findById(reviewId).get();
 
-    return review;
+    ReviewDTO reviewDTO = ReviewDTO.builder()
+      .reviewId(review.getReviewId())
+      .reservationId(review.getReservationId())
+      .userId(review.getUserId())
+      .targetId(review.getTargetId())
+      .userName(review.getUserName())
+      .targetType(review.getTargetType())
+      .targetName(review.getTargetName())
+      .programType(review.getProgramType())
+      .reviewRating(review.getReviewRating())
+      .reviewComment(review.getReviewComment())
+      .deleted(review.isDeleted())
+      .build();
+
+    return reviewDTO;
+  }
+
+  public void updateReview(Review review) {
+    ReviewUpdated reviewUpdated = new ReviewUpdated(review);
+
+    String event = reviewUpdated.json();
+
+    eventService.publish("review", event);
+
+    reviewRepository.save(review);
   }
 
 }

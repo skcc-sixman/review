@@ -20,7 +20,7 @@ public class EventService {
     logger.info("##### Message(publish): " + event);
   }
 
-  @KafkaListener(topics = "test", groupId = "test")
+  @KafkaListener(topics = "review", groupId = "review")
   public void subscribe(String event) {
     logger.info("##### Message(subscribe): " + event);
   }

@@ -1,8 +1,11 @@
 package com.recofit.review.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,12 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.recofit.review.domain.Review;
-import com.recofit.review.event.ReviewCreated;
-import com.recofit.review.event.ReviewUpdated;
-import com.recofit.review.service.EventService;
+import com.recofit.review.domain.ReviewDTO;
 import com.recofit.review.service.ReviewService;
+import com.recofit.review.util.Response;
 import com.recofit.review.util.TargetType;
 import com.recofit.review.util.UserType;
 
@@ -30,27 +31,25 @@ public class ReviewController {
   @Autowired
   private ReviewService reviewService;
 
-  @Autowired
-  private EventService eventService;
-
   @PostMapping(value = "/reviews")
-  public void createReview(@RequestBody Review review) {
-    reviewService.setReview(review);
+  public ResponseEntity<Response> createReview(@RequestBody Review review) {
+    reviewService.createReview(review);
 
-    ReviewCreated reviewCreated = new ReviewCreated(review);
+    Response response = Response.builder()
+      .result("SUCCESS")
+      .build();
 
-    String event = reviewCreated.json();
-
-    eventService.publish("review", event);
+    return new ResponseEntity<Response>(response, HttpStatus.OK);
   }
 
   @GetMapping(value = "/reviews")
-  public List<Review> getReviews(@RequestParam(required = false, value = "target-type") TargetType targetType) {
+  public ResponseEntity<Response> getReviews(@RequestParam(required = false, value = "target-type") TargetType targetType) {
     Long userId = 1L;
     UserType userType = UserType.USER;
+    List<ReviewDTO> reviewDTOs = Collections.emptyList();
 
     if(userType == UserType.USER) {
-      return reviewService.getUserReviews(userId, targetType, false);
+      reviewDTOs = reviewService.getUserReviews(userId, targetType, false);
     }
 
     Long targetId = userId;
@@ -63,23 +62,37 @@ public class ReviewController {
       targetType = TargetType.GYM;
     }
 
-    return reviewService.getTargetReviews(targetId, targetType, false);
+    reviewDTOs = reviewService.getTargetReviews(targetId, targetType, false);
+
+    Response response = Response.builder()
+      .result("SUCCESS")
+      .data(reviewDTOs)
+      .build();
+
+    return new ResponseEntity<Response>(response, HttpStatus.OK);
   }
 
   @GetMapping(value = "/reviews/{reviewId}")
-  public Review getReview(@PathVariable Long reviewId) {
-    return reviewService.getReview(reviewId);
+  public ResponseEntity<Response> getReview(@PathVariable Long reviewId) {
+    ReviewDTO reviewDTO = reviewService.getReview(reviewId);
+
+    Response response = Response.builder()
+      .result("SUCCESS")
+      .data(reviewDTO)
+      .build();
+
+    return new ResponseEntity<Response>(response, HttpStatus.OK);
   }
 
   @PatchMapping(value = "/reviews/{reviewId}")
-  public void updateReview(@RequestBody Review review) {
-    reviewService.setReview(review);
+  public ResponseEntity<Response> updateReview(@RequestBody Review review) {
+    reviewService.updateReview(review);
 
-    ReviewUpdated reviewUpdated = new ReviewUpdated(review);
+    Response response = Response.builder()
+      .result("SUCCESS")
+      .build();
 
-    String event = reviewUpdated.json();
-
-    eventService.publish("review", event);
+    return new ResponseEntity<Response>(response, HttpStatus.OK);
   }
 
 }

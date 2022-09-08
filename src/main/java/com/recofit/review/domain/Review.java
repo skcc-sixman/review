@@ -29,6 +29,6 @@ public class Review extends AuditingDate {
   private double reviewRating;
   private String reviewComment;
 
-  private boolean isDeleted;
+  private boolean deleted;
 
 }

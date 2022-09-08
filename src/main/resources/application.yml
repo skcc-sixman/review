@@ -3,6 +3,14 @@ server:
 
 spring:
   datasource:
+    url: jdbc:h2:mem:review
+  jpa:
+    show-sql: true
+
+---
+
+spring:
+  datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://recofit-db.caxwmkvaba6j.ap-northeast-2.rds.amazonaws.com/review
     username: root
@@ -18,3 +26,6 @@ spring:
     producer:
       bootstrap-servers:
       - b-2.recofitkafkaclust.01fdq3.c4.kafka.ap-northeast-2.amazonaws.com:9094,b-1.recofitkafkaclust.01fdq3.c4.kafka.ap-northeast-2.amazonaws.com:9094
+  config:
+    activate:
+      on-profile: prd

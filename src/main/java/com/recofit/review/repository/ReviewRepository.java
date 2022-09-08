@@ -9,8 +9,8 @@ import com.recofit.review.util.TargetType;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-  List<Review> findByUserIdAndTargetTypeAndIsDeleted(Long userId, TargetType targetType, boolean isDeleted);
+  List<Review> findByUserIdAndTargetTypeAndDeleted(Long userId, TargetType targetType, boolean deleted);
 
-  List<Review> findByTargetIdAndTargetTypeAndIsDeleted(Long targetId, TargetType targetType, boolean isDeleted);
+  List<Review> findByTargetIdAndTargetTypeAndDeleted(Long targetId, TargetType targetType, boolean deleted);
 
 }
