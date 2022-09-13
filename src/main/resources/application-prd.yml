@@ -8,6 +8,9 @@ server:
 #     url: jdbc:h2:mem:review
 #   jpa:
 #     show-sql: true
+#   config:
+#     activate:
+#     on-profile: prd
 
 ---
 
@@ -34,3 +37,6 @@ spring:
       # - b-1.recofit.bqx97j.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-2.recofit.bqx97j.c4.kafka.ap-northeast-2.amazonaws.com:9092,b-3.recofit.bqx97j.c4.kafka.ap-northeast-2.amazonaws.com:9092
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  # config:
+    # activate:
+    #   on-profile: prd

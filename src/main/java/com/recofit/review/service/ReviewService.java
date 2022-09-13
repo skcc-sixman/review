@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.recofit.review.domain.GymDto;
+import com.recofit.review.domain.KafkaRatingsDto;
 import com.recofit.review.domain.Review;
 import com.recofit.review.domain.ReviewDTO;
 import com.recofit.review.event.ReviewCreated;
@@ -33,11 +35,25 @@ public class ReviewService {
       .reviewRating(average)
       .build();
 
-    ReviewCreated reviewCreated = new ReviewCreated(reviewDTO);
+    if(TargetType.TRAINER.equals(reviewDTO.getTargetType())) {
+      String stringUserId = reviewDTO.getTargetId().toString();
 
-    String event = reviewCreated.json();
+      KafkaRatingsDto kafkaRatingsDto = KafkaRatingsDto.builder().userId(stringUserId).ratings(reviewDTO.getReviewRating()).build();
 
-    eventService.publish("review", event);
+      eventService.sendAccount("recofit-account-ratings", kafkaRatingsDto);
+    }
+
+    if(TargetType.GYM.equals(reviewDTO.getTargetType())) {
+      GymDto gymDto = GymDto.builder().gymId(reviewDTO.getTargetId()).rating(reviewDTO.getReviewRating()).build();
+
+      eventService.sendGym("recofit-gym-ratings", gymDto);
+    }
+
+    // ReviewCreated reviewCreated = new ReviewCreated(reviewDTO);
+
+    // String event = reviewCreated.json();
+
+    // eventService.publish("review", event);
   }
 
   public List<ReviewDTO> getUserReviews(Long userId, TargetType targetType, boolean deleted) {
@@ -115,11 +131,25 @@ public class ReviewService {
       .reviewRating(average)
       .build();
 
-    ReviewUpdated reviewUpdated = new ReviewUpdated(reviewDTO);
+    if(TargetType.TRAINER.equals(reviewDTO.getTargetType())) {
+      String uid = reviewDTO.getTargetId().toString();
 
-    String event = reviewUpdated.json();
+      KafkaRatingsDto kafkaRatingsDto = KafkaRatingsDto.builder().userId(uid).ratings(reviewDTO.getReviewRating()).build();
 
-    eventService.publish("review", event);
+      eventService.sendAccount("recofit-account-ratings", kafkaRatingsDto);
+    }
+
+    if(TargetType.GYM.equals(reviewDTO.getTargetType())) {
+      GymDto gymDto = GymDto.builder().gymId(reviewDTO.getTargetId()).rating(reviewDTO.getReviewRating()).build();
+
+      eventService.sendGym("recofit-gym-ratings", gymDto);
+    }
+
+    // ReviewUpdated reviewUpdated = new ReviewUpdated(reviewDTO);
+
+    // String event = reviewUpdated.json();
+
+    // eventService.publish("review", event);
   }
 
 }
