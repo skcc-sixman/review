@@ -105,4 +105,27 @@ public class ReviewController {
     return new ResponseEntity<Response>(response, HttpStatus.OK);
   }
 
+  @GetMapping(value = "/reviews/test")
+  public ResponseEntity<Response> test() {
+
+    Response response = Response.builder()
+      .result("SUCCESS")
+      .data("test")
+      .build();
+
+    return new ResponseEntity<Response>(response, HttpStatus.OK);
+  }
+
+  @GetMapping(value = "/reviews/circuit-breaker")
+  public ResponseEntity<Response> circuitBreaker() {
+    ResponseEntity<String> data = reviewService.circuitBreaker();
+
+    Response response = Response.builder()
+      .result("SUCCESS")
+      .data(data)
+      .build();
+
+    return new ResponseEntity<Response>(response, HttpStatus.OK);
+  }
+
 }

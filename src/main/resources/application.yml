@@ -1,24 +1,43 @@
 server:
   port: 8085
 
----
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 5s
+    instances:
+      review:
+        baseConfig: default
 
-# spring:
-#   datasource:
-#     url: jdbc:h2:mem:review
-#   jpa:
-#     show-sql: true
+springdoc:
+  swagger-ui:
+    path: /api/reviews/swagger-ui.html
 
 ---
 
 spring:
+  datasource:
+    url: jdbc:h2:mem:review
+  jpa:
+    show-sql: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: prd
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://recofit-db.caxwmkvaba6j.ap-northeast-2.rds.amazonaws.com/review
     username: root
     password: 2!qkfzlfldk;
   jpa:
-    show-sql: true
     hibernate:
       ddl-auto: none
   kafka:

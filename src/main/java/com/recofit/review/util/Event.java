@@ -1,38 +1,38 @@
-package com.recofit.review.util;
+// package com.recofit.review.util;
 
-import org.springframework.beans.BeanUtils;
+// import org.springframework.beans.BeanUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.Setter;
+// import com.fasterxml.jackson.core.JsonProcessingException;
+// import com.fasterxml.jackson.databind.ObjectMapper;
+// import lombok.Setter;
 
-@Setter
-public class Event {
+// @Setter
+// public class Event {
 
-  private String type;
+//   private String type;
 
-  public Event() {
-    this.setType(this.getClass().getSimpleName());
-  }
+//   public Event() {
+//     this.setType(this.getClass().getSimpleName());
+//   }
 
-  public Event(Object entity) {
-    this();
+//   public Event(Object entity) {
+//     this();
 
-    BeanUtils.copyProperties(entity, this);
-  }
+//     BeanUtils.copyProperties(entity, this);
+//   }
 
-  public String json() {
-    ObjectMapper objectMapper = new ObjectMapper();
+//   public String json() {
+//     ObjectMapper objectMapper = new ObjectMapper();
 
-    String str = "";
+//     String str = "";
 
-    try {
-      str = objectMapper.writeValueAsString(this);
-    } catch (JsonProcessingException e) {
-      e.printStackTrace();
-    }
+//     try {
+//       str = objectMapper.writeValueAsString(this);
+//     } catch (JsonProcessingException e) {
+//       e.printStackTrace();
+//     }
 
-    return str;
-  }
+//     return str;
+//   }
 
-}
+// }

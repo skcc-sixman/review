@@ -4,25 +4,31 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.recofit.review.domain.GymDto;
 import com.recofit.review.domain.KafkaRatingsDto;
 import com.recofit.review.domain.Review;
 import com.recofit.review.domain.ReviewDTO;
-import com.recofit.review.event.ReviewCreated;
-import com.recofit.review.event.ReviewUpdated;
+// import com.recofit.review.event.ReviewCreated;
+// import com.recofit.review.event.ReviewUpdated;
 import com.recofit.review.repository.ReviewRepository;
 import com.recofit.review.util.TargetType;
+
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 
 @Service
 public class ReviewService {
 
   @Autowired
-  private ReviewRepository reviewRepository;
+  private EventService eventService;
+  @Autowired
+  private FeignService feignService;
 
   @Autowired
-  private EventService eventService;
+  private ReviewRepository reviewRepository;
 
   public void createReview(Review review) {
     reviewRepository.save(review);
@@ -150,6 +156,15 @@ public class ReviewService {
     // String event = reviewUpdated.json();
 
     // eventService.publish("review", event);
+  }
+
+  @CircuitBreaker(name = "review", fallbackMethod = "fallback")
+  public ResponseEntity<String> circuitBreaker() {
+    return feignService.accountTest();
+  }
+
+  private ResponseEntity<String> fallback(CallNotPermittedException e) {
+    return ResponseEntity.ok("Handled the exception when the CircuitBreaker is open");
   }
 
 }
